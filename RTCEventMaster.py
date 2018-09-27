@@ -27,7 +27,7 @@ class EventBlock:
 
 class EventMaster(threading.Thread):
     def __init__(self, freq=20):  # конструктор класса EventMaster
-        threading.Thread.__init__(self)
+        threading.Thread.__init__(self, daemon=True)
         self.eventList = []  # список возможных событий, с привязанными ф-ями
         self.eventQueue = []  # очередь выполнения функций событий
         self.Exit = False  # метка выхода из потока
@@ -42,7 +42,7 @@ class EventMaster(threading.Thread):
                     element.event.clear()  # снять метку события
 
                 if len(self.eventQueue) > 0:  # если очередь не пуста
-                    self.threads.append(threading.Thread(target=self.eventQueue.pop(0).foo))  # добавить в список
+                    self.threads.append(threading.Thread(daemon=True, target=self.eventQueue.pop(0).foo))  # добавить в список
                     #  потоков функцию, принадлежащую первому элементу очереди, при этом удаляя его из очереди
                     self.threads.pop(0).start()  # запустить первый элемент списка потоков, при этом удаляя его
             time.sleep(self.timeSleep)
